@@ -324,7 +324,7 @@ async function main() {
           tokens[i] = token;
           const tokenLines = (await fss.readFile('tokens.txt', 'utf-8')).split('\n');
           tokenLines[i] = token.trim();
-          await fss.writeFile('token.txt', tokenLines.join('\n'), 'utf-8');
+          await fss.writeFile('tokens.txt', tokenLines.join('\n'), 'utf-8');
           logger(`Account ${i + 1} đã được làm mới token`, "success");
       } else if (!decoded) {
           logger(`Bắt đầu lấy token cho tài khoản ${i + 1}`, 'warn')

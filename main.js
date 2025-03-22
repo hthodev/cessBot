@@ -321,6 +321,7 @@ async function main() {
               continue;
           }
           const token = await loginCESS(email, otp);
+          token.push(token)
           tokens[i] = token;
           const tokenLines = (await fss.readFile('tokens.txt', 'utf-8')).split('\n');
           tokenLines[i] = token.trim();

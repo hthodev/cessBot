@@ -64,40 +64,45 @@ async function createMailAccount() {
     quantity = parseInt(quantity);
 
     const PASSWORD = await rl.question("Nhập mật khẩu muốn đặt để truy cập vào hộp thư mailjs: ");
-    const emailPrefix = generateRandomEmail();
-    const domains = await getAvailableDomains();
+    for (let i = 0; i < quantity; i++) {
+        logger(`Đang tạo email thứ ${i + 1}`)
+        const emailPrefix = generateRandomEmail();
+        const domains = await getAvailableDomains();
+        
+        if (domains.length === 0) {
+            continue
+        }
     
-    if (domains.length === 0) {
-        return null;
-    }
-
-    const selectedDomain = domains[0];
-    const email = `${emailPrefix}@${selectedDomain}`;
-    logger(email);
-    const payload = JSON.stringify({ address: email, password: PASSWORD });
-
-    try {
-        const response = await fetch(`${BASE_URL}/accounts`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: payload
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        const selectedDomain = domains[0];
+        const email = `${emailPrefix}@${selectedDomain}`;
+        logger(email);
+        const payload = JSON.stringify({ address: email, password: PASSWORD });
+    
+        try {
+            const response = await fetch(`${BASE_URL}/accounts`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: payload
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            logger("✅ Tài khoản được tạo thành công!", 'success');
+            if (data.address) {
+                await saveToFile('accounts.txt', `${data.address},${PASSWORD}`)
+            }
+            logger("Chờ 20s để tiếp tục")
+            await new Promise(resolve => setTimeout(resolve, 20 * 1000))
+        } catch (error) {
+            logger(`❌ Lỗi khi tạo tài khoản: ${error.message}`, 'error')
+            i--
         }
-
-        const data = await response.json();
-        logger("✅ Tài khoản được tạo thành công!", 'success');
-        if (data.address) {
-            await saveToFile('accounts.txt', `${data.address},${PASSWORD}`)
-        }
-    } catch (error) {
-        logger(`❌ Lỗi khi tạo tài khoản: ${error.message}`, 'error');
-        return null;
+    
     }
     rl.close()
 }
 
-// Gọi thử hàm
 createMailAccount();

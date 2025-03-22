@@ -322,9 +322,9 @@ async function main() {
           }
           const token = await loginCESS(email, otp);
           tokens[i] = token;
-          const tokenLines = (await fs.readFile('tokens.txt', 'utf-8')).split('\n');
+          const tokenLines = (await fss.readFile('tokens.txt', 'utf-8')).split('\n');
           tokenLines[i] = token.trim();
-          await fs.writeFile('token.txt', tokenLines.join('\n'), 'utf-8');
+          await fss.writeFile('token.txt', tokenLines.join('\n'), 'utf-8');
           logger(`Account ${i + 1} đã được làm mới token`, "success");
       } else if (!decoded) {
           logger(`Bắt đầu lấy token cho tài khoản ${i + 1}`, 'warn')

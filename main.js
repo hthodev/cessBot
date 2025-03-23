@@ -324,7 +324,6 @@ async function main() {
           if (!token) {
             logger("không đăng nhập được, chuyển sang tài khoản khác", 'error')
           }
-          token.push(token)
           tokens[i] = token;
           const tokenLines = (await fss.readFile('tokens.txt', 'utf-8')).split('\n');
           tokenLines[i] = token.trim();
